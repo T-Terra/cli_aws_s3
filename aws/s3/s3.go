@@ -1,7 +1,24 @@
 package s3
 
-import "fmt"
+import (
+	"fmt"
+	"flag"
+	"os"
+)
 
-func Read_args( args []string) {
-	fmt.Printf("Os argumentos são: %v", args)
+func Read_files_command() {
+	command := flag.String("file-read", "", "Read file with path of files S3")
+	flag.Parse()
+	fmt.Printf("Os argumentos são: %v", (*command))
+}
+
+func Sub_commands() {
+	addCmd := flag.NewFlagSet("add", flag.PanicOnError)
+
+	n1 := addCmd.Float64("n1", 0, "Número")
+
+	addCmd.Parse(os.Args[2:])
+
+	fmt.Println(*n1)
+
 }
