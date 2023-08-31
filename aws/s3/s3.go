@@ -7,18 +7,22 @@ import (
 )
 
 func Read_files_command() {
-	command := flag.String("file-read", "", "Read file with path of files S3")
+	command := flag.String("file", "", "Read file with path of files S3")
 	flag.Parse()
-	fmt.Printf("Os argumentos são: %v\n", (*command))
-}
-
-func Sub_commands() {
-	addCmd := flag.NewFlagSet("add", flag.PanicOnError)
-
-	n1 := addCmd.Float64("n1", 0, "Número")
-
-	addCmd.Parse(os.Args[2:])
-
-	fmt.Println(*n1)
-
+	currentFile, err := os.ReadDir("./")
+	if err != nil {
+		panic(err)
+	}
+	for i := 0; i < len(currentFile); i++ {
+		if currentFile[i].Name() == *command {
+			fmt.Printf("Arquivo existe: %v\n", currentFile[i].Name())
+		} else {
+			newFile, err := os.Create("path.txt") // Create a new file
+			if err != nil {
+				fmt.Println(err)
+			}
+			defer newFile.Close()
+			fmt.Println("Arquivo Criado com sucesso!!!")
+		}
+	}
 }
