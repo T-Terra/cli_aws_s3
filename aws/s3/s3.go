@@ -9,7 +9,7 @@ import (
 func Read_files_command() {
 	command := flag.String("file-read", "", "Read file with path of files S3")
 	flag.Parse()
-	fmt.Printf("Os argumentos são: %v", (*command))
+	fmt.Printf("Os argumentos são: %v\n", (*command))
 }
 
 func Sub_commands() {
