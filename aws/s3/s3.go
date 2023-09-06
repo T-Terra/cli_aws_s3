@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"flag"
 	"os"
-	"runtime"
 	"os/exec"
+	"regexp"
 )
 
 type ParamsInstallWin struct {
@@ -14,12 +14,14 @@ type ParamsInstallWin struct {
 	url_to_download string
 }
 
-var command *string = flag.String("file", "", "Read file with path of files S3")
+var command_create_file *string = flag.String("file", "", "Read file with path of files S3")
+var command_installing_aws_cli *string = flag.String("install_aws_cli", "", "Installing aws cli in linux or windows os (parameters=linux or windows)")
+var command_help *string = flag.String("h", "", "Show all commands usage")
 
 func Create_file_command() {
 	result_verify_dir := Verify_dir()
 	if result_verify_dir == "File not exists" {
-		newFile, err := os.Create(*command) // Create a new file
+		newFile, err := os.Create(*command_create_file) // Create a new file
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -35,7 +37,7 @@ func Verify_dir() ( txt_result string) {
 		panic(err)
 	}
 	for _, file := range currentFile {
-		if file.Name() == *command {
+		if file.Name() == *command_create_file {
 			fmt.Printf("Arquivo existe: %v\n", file.Name())
 			txt_result = "File exists"
 		} else {
@@ -46,14 +48,29 @@ func Verify_dir() ( txt_result string) {
 }
 
 
+func Regex_find_args( pattern string, arg_search string) bool {
+	result, err := regexp.MatchString(pattern, arg_search)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+func Help() string {
+	flag.Parse()
+	return *command_help
+}
+
 func ExeInstallAwsCli() {
+	flag.Parse()
+
 	payload := ParamsInstallWin {
 		msiexec: "msiexec.exe",
 		param: "/i",
 		url_to_download: "https://awscli.amazonaws.com/AWSCLIV2.msi",
 	}
-	
-	if runtime.GOOS == "linux" {
+
+	if *command_installing_aws_cli == "linux" {
 		cmd1 := exec.Command("curl", "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip", "-o", "awscliv2.zip")
 
 		// Comando 2: Descompactar o arquivo awscliv2.zip
@@ -79,7 +96,7 @@ func ExeInstallAwsCli() {
 		}
 
 		fmt.Println("AWS CLI instalado com sucesso!")
-	} else if runtime.GOOS == "windows" {
+	} else if *command_installing_aws_cli == "windows" {
 		// Comando a ser executado
 		cmd1 := exec.Command(payload.msiexec, payload.param, payload.url_to_download)
 
