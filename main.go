@@ -4,18 +4,22 @@ import (
 	"cli_aws_s3/aws/s3"
 	"fmt"
 	"os"
-	"regexp"
 )
 
 func main() {
-	result, err := regexp.MatchString("-file.*", os.Args[1])
-	if err != nil {
-		panic(err)
-	}
-	if len(os.Args) > 1 && result {
-		s3.Create_file_command()
+	if len(os.Args) > 1 {
+		create_file := s3.Regex_find_args("-file.*", os.Args[1])
+		install_os := s3.Regex_find_args("-install_aws_cli.*", os.Args[1])
+
+		if create_file {
+			s3.Create_file_command()
+		} else if install_os {
+			fmt.Println("Instalando AWS CLI..")
+			s3.ExeInstallAwsCli()
+		} else {
+			s3.Help()
+		}
 	} else {
-		fmt.Println("Executando outra ação")
-		s3.ExeInstallAwsCli()
+		fmt.Println("adicione a flag -h para verificar o modo de uso")	
 	}
 }
