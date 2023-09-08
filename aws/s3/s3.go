@@ -14,8 +14,15 @@ type ParamsInstallWin struct {
 	url_to_download string
 }
 
+type ParamsInstallLinux struct {
+	download []string
+	zip []string
+	install []string
+	uninstall []string
+}
+
 var command_create_file *string = flag.String("file", "", "Read file with path of files S3")
-var command_installing_aws_cli *string = flag.String("install_aws_cli", "", "Installing aws cli in linux or windows os (parameters=linux or windows)")
+var command_installing_aws_cli *string = flag.String("i", "", "Installing aws cli in linux or windows os (-i=linux/windows)")
 var command_help *string = flag.String("h", "", "Show all commands usage")
 
 func Create_file_command() {
@@ -64,47 +71,62 @@ func Help() string {
 func ExeInstallAwsCli() {
 	flag.Parse()
 
-	payload := ParamsInstallWin {
+	payloadWin := ParamsInstallWin {
 		msiexec: "msiexec.exe",
 		param: "/i",
 		url_to_download: "https://awscli.amazonaws.com/AWSCLIV2.msi",
 	}
 
+	payloadLinux := ParamsInstallLinux {
+		download: []string{"curl", "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip", "-o", "awscliv2.zip"},
+		zip: []string{"unzip", "awscliv2.zip"},
+		install: []string{"sudo", "./aws/install"},
+		uninstall: []string{"sudo", "rm", "-rf", "aws/"},
+	}
+
 	if *command_installing_aws_cli == "linux" {
-		cmd1 := exec.Command("curl", "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip", "-o", "awscliv2.zip")
+		cmd1 := exec.Command(payloadLinux.download[0], payloadLinux.download[1], payloadLinux.download[2], payloadLinux.download[3])
 
-		// Comando 2: Descompactar o arquivo awscliv2.zip
-		cmd2 := exec.Command("unzip", "awscliv2.zip")
+		cmd2 := exec.Command(payloadLinux.zip[0], payloadLinux.zip[1])
 
-		// Comando 3: Instalar o AWS CLI
-		cmd3 := exec.Command("sudo", "./aws/install")
+		cmd3 := exec.Command(payloadLinux.install[0], payloadLinux.install[1])
 
-		// Execute os comandos em sequência
-		if err := cmd1.Run(); err != nil {
-			fmt.Println("Erro ao baixar o arquivo:", err)
+		remove_dir_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.uninstall[1], payloadLinux.uninstall[2], payloadLinux.uninstall[3])
+
+		remove_zip_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.uninstall[1], payloadLinux.zip[1])
+
+		if err1 := cmd1.Run(); err1 != nil {
+			fmt.Println("Erro ao baixar o arquivo:", err1)
 			os.Exit(1)
 		}
 
-		if err := cmd2.Run(); err != nil {
-			fmt.Println("Erro ao descompactar o arquivo:", err)
+		if err2 := cmd2.Run(); err2 != nil {
+			fmt.Println("Erro ao descompactar o arquivo:", err2)
 			os.Exit(1)
 		}
 
-		if err := cmd3.Run(); err != nil {
-			fmt.Println("Erro ao instalar o AWS CLI:", err)
+		if err3 := cmd3.Run(); err3 != nil {
+			fmt.Println("Erro ao instalar o AWS CLI:", err3)
+			os.Exit(1)
+		}
+
+		if err4 := remove_dir_aws.Run(); err4 != nil {
+			fmt.Println("Erro ao apagar a pasta AWS", err4)
+			os.Exit(1)
+		}
+
+		if err5 := remove_zip_aws.Run(); err5 != nil {
+			fmt.Println("Erro ao apagar o zip AWS", err5)
 			os.Exit(1)
 		}
 
 		fmt.Println("AWS CLI instalado com sucesso!")
 	} else if *command_installing_aws_cli == "windows" {
-		// Comando a ser executado
-		cmd1 := exec.Command(payload.msiexec, payload.param, payload.url_to_download)
+		cmd1 := exec.Command(payloadWin.msiexec, payloadWin.param, payloadWin.url_to_download)
 
-		// Configurar a saída padrão e erro para a saída do seu programa
 		cmd1.Stdout = os.Stdout
 		cmd1.Stderr = os.Stderr
 
-		// Executar o comando
 		err := cmd1.Run()
 		if err != nil {
 			fmt.Printf("Erro ao executar o instalação: %v\n", err)
