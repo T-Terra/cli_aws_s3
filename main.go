@@ -9,7 +9,7 @@ import (
 func main() {
 	if len(os.Args) > 1 {
 		create_file := s3.Regex_find_args("-file.*", os.Args[1])
-		install_os := s3.Regex_find_args("-install_aws_cli.*", os.Args[1])
+		install_os := s3.Regex_find_args("-i.*", os.Args[1])
 
 		if create_file {
 			s3.Create_file_command()
@@ -20,6 +20,6 @@ func main() {
 			s3.Help()
 		}
 	} else {
-		fmt.Println("adicione a flag -h para verificar o modo de uso")	
+		fmt.Println("use a flag -h para verificar o modo de uso")
 	}
 }
