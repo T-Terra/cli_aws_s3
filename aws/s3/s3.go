@@ -1,11 +1,12 @@
 package s3
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
+	"strings"
 )
 
 type ParamsInstallWin struct {
@@ -21,8 +22,9 @@ type ParamsInstallLinux struct {
 	uninstall []string
 }
 
-var command_create_file *string = flag.String("file", "", "Read file with path of files S3")
+var command_create_file *string = flag.String("create_file", "", "Read file with path of files S3")
 var command_installing_aws_cli *string = flag.String("i", "", "Installing aws cli in linux or windows os (-i=linux/windows)")
+var command_read_file *string = flag.String("file", "", "Read file for get data")
 var command_help *string = flag.String("h", "", "Show all commands usage")
 
 func Create_file_command() {
@@ -53,7 +55,6 @@ func Verify_dir() ( txt_result string) {
 	}
 	return txt_result
 }
-
 
 func Regex_find_args( pattern string, arg_search string) bool {
 	result, err := regexp.MatchString(pattern, arg_search)
@@ -137,4 +138,15 @@ func ExeInstallAwsCli() {
 	} else {
 		fmt.Println("Sistema não encontrado")
 	}
+}
+
+func ReadFile() []string {
+	flag.Parse()
+	file, err := os.ReadFile(*command_read_file)
+	if err != nil {
+		fmt.Println("Erro ao ler o arquivo")
+	}
+	stringFormat := string(file)
+	splitString := strings.Split(stringFormat, "\n")
+	return splitString
 }

@@ -8,14 +8,20 @@ import (
 
 func main() {
 	if len(os.Args) > 1 {
-		create_file := s3.Regex_find_args("-file.*", os.Args[1])
+		create_file := s3.Regex_find_args(".*create_file.*", os.Args[1])
 		install_os := s3.Regex_find_args("-i.*", os.Args[1])
+		read_file := s3.Regex_find_args(".*file.*", os.Args[1])
 
 		if create_file {
 			s3.Create_file_command()
 		} else if install_os {
 			fmt.Println("Instalando AWS CLI..")
 			s3.ExeInstallAwsCli()
+		} else if read_file {
+			dados := s3.ReadFile()
+			for i := 0; i < len(dados); i++ {
+				fmt.Println(dados[i])
+			}
 		} else {
 			s3.Help()
 		}
