@@ -22,6 +22,11 @@ type ParamsInstallLinux struct {
 	uninstall []string
 }
 
+type ParamsAws struct {
+	cmd []string
+	bucket string
+}
+
 var command_create_file *string = flag.String("create_file", "", "Read file with path of files S3")
 var command_installing_aws_cli *string = flag.String("i", "", "Installing aws cli in linux or windows os (-i=linux/windows)")
 var command_read_file *string = flag.String("file", "", "Read file for get data")
@@ -149,4 +154,13 @@ func ReadFile() []string {
 	stringFormat := string(file)
 	splitString := strings.Split(stringFormat, "\n")
 	return splitString
+}
+
+func ExeCommandAws( data string ) {
+	payloadAws := ParamsAws {
+		cmd: []string{"aws", "s3", "ls", "s3://"},
+		bucket: "arquivos.br",
+	}
+	fmt.Println(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + payloadAws.bucket + data)
+	// exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + payloadAws.bucket + data)
 }
