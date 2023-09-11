@@ -20,7 +20,7 @@ func main() {
 		} else if read_file {
 			dados := s3.ReadFile()
 			for i := 0; i < len(dados); i++ {
-				fmt.Println(dados[i])
+				s3.ExeCommandAws(dados[i])
 			}
 		} else {
 			s3.Help()
