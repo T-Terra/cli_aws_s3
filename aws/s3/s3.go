@@ -24,7 +24,6 @@ type ParamsInstallLinux struct {
 
 type ParamsAws struct {
 	cmd []string
-	bucket string
 }
 
 var command_create_file *string = flag.String("create_file", "", "Read file with path of files S3")
@@ -156,11 +155,10 @@ func ReadFile() []string {
 	return splitString
 }
 
-func ExeCommandAws( data string ) {
+func ExeCommandAws( data string, bucketS3 string ) {
 	payloadAws := ParamsAws {
 		cmd: []string{"aws", "s3", "ls", "s3://"},
-		bucket: "arquivos.br",
 	}
-	fmt.Println(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + payloadAws.bucket + data)
+	fmt.Println(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + data)
 	// exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + payloadAws.bucket + data)
 }
