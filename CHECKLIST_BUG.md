@@ -8,4 +8,4 @@
 [x] Utilizar como parâmetro o nome do bucket e arquivo a ser lido
 [x] Verificar como instalar o programa tanto no linux quanto no windows
 [] Pesquisar como fazer um alias para chamar o programa como algo [$ cli_s3]
-[] Tratar erro quando não adicionar o nome do bucket se for parâmetro -file | bucket := os.Args[2]
+[x] Tratar erro quando não adicionar o nome do bucket se for parâmetro -file | bucket := os.Args[2]
