@@ -159,6 +159,5 @@ func ExeCommandAws( data string, bucketS3 string ) {
 	payloadAws := ParamsAws {
 		cmd: []string{"aws", "s3", "ls", "s3://"},
 	}
-	fmt.Println(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + data)
-	// exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + payloadAws.bucket + data)
+	exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + data)
 }

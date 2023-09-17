@@ -18,10 +18,16 @@ func main() {
 			fmt.Println("Instalando AWS CLI..")
 			s3.ExeInstallAwsCli()
 		} else if read_file {
-			bucket := os.Args[2]
-			dados := s3.ReadFile()
-			for i := 0; i < len(dados); i++ {
-				s3.ExeCommandAws(dados[i], bucket)
+			if len(os.Args) != 3 {
+				fmt.Println("Adicione o nome do bucket como segundo argumento")
+				fmt.Println("Exemplo: -file=<nome do arquivo> <bucket>")
+				return
+			} else {
+				dados := s3.ReadFile()
+				bucket := os.Args[2]
+				for i := 0; i < len(dados); i++ {
+					s3.ExeCommandAws(dados[i], bucket)
+				}
 			}
 		} else {
 			s3.Help()
