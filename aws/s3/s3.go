@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
+	"runtime"
 )
 
 type ParamsInstallWin struct {
@@ -24,6 +25,7 @@ type ParamsInstallLinux struct {
 
 type ParamsAws struct {
 	cmd []string
+	dirNew []string
 }
 
 var command_create_file *string = flag.String("create_file", "", "Read file with path of files S3")
@@ -157,7 +159,26 @@ func ReadFile() []string {
 
 func ExeCommandAws( data string, bucketS3 string ) {
 	payloadAws := ParamsAws {
-		cmd: []string{"aws", "s3", "ls", "s3://"},
+		cmd: []string{"aws", "s3", "cp", "s3://"},
+		dirNew: []string{"mkdir", "s3_downloads"},
 	}
-	exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + data)
+	if runtime.GOOS == "linux" {
+		_, err := os.Stat("s3_downloads")
+		if os.IsNotExist(err) {
+			cmd := exec.Command(payloadAws.dirNew[0], payloadAws.dirNew[1])
+			errCmd := cmd.Run()
+			if errCmd != nil {
+				fmt.Printf("Erro ao criar o diretório: %v\n", err)
+				return
+			}
+		}
+		fmt.Println("Download:")
+		fmt.Println(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + "/" + data, "./" + payloadAws.dirNew[1])
+		cmd := exec.Command(payloadAws.cmd[0], payloadAws.cmd[1], payloadAws.cmd[2], payloadAws.cmd[3] + bucketS3 + "/" + data, "./" + payloadAws.dirNew[1])
+		err2 := cmd.Run()
+		if err2 != nil {
+			fmt.Printf("Erro ao executar o download do arquivo: %v\n", err)
+			return
+		}
+	}
 }
