@@ -25,11 +25,20 @@ jobs:
       with:
         go-version: '1.20'
 
-    - name: Build
-      run: go build -v main.go -o bin/aws_cli
+    - name: Build linux
+      run: go build -v -o bin/aws_cli
 
-    - name: Create Artifact
+    - name: Create Artifact linux
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: my-artifact linux
         path: ./bin/aws_cli
+
+    - name: Build windows
+      run: go build -v -o bin/aws_cli.exe
+
+    - name: Create Artifact windows
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact windows
+        path: ./bin/aws_cli.exe
