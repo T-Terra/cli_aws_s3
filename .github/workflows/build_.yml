@@ -1,14 +1,13 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Build aws_cli_s3
+name: Build aws_cli_s3 linux
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -28,17 +27,8 @@ jobs:
     - name: Build linux
       run: go build -v -o bin/aws_cli
 
-    - name: Create Artifact linux
+    - name: Create Artifact-linux
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact linux
+        name: my-artifact-linux
         path: ./bin/aws_cli
-
-    - name: Build windows
-      run: go build -v -o bin/aws_cli.exe
-
-    - name: Create Artifact windows
-      uses: actions/upload-artifact@v2
-      with:
-        name: my-artifact windows
-        path: ./bin/aws_cli.exe
