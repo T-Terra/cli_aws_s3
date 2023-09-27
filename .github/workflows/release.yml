@@ -6,12 +6,35 @@ on:
       - "v*"
 
 jobs:
-  release_create:
-    name: Release Create
+  get_tag:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 2
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+    outputs:
+        current_tag: ${{ steps.latest_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
+        name: Checkout
+        
+      - name: Get Latest Tag
+        id: latest_tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+
+  release_create_cli:
+    name: Release Create ${{ needs.get_tag.outputs.current_tag }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: get_tag
+    steps:
+      - uses: actions/checkout@v3
+        with:
+           fetch-depth: 0
+           ref: ${{ needs.get_tag.outputs.current_tag }}
         name: Checkout
 
       - uses: actions/create-release@v1
@@ -20,8 +43,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: verifique o executável no pipeline de deploy.
+          tag_name: ${{ needs.get_tag.outputs.current_tag }}
+          release_name: ${{ needs.get_tag.outputs.current_tag }}
+          body: release cli s3.
           draft: false
           prerelease: false
