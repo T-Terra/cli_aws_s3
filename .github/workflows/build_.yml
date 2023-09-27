@@ -3,7 +3,7 @@
 
 name: Build aws_cli_s3 linux
 
-run-name: build Version ${{ github.ref_name }}
+run-name: build Version linux ${{ github.ref_name }}
 
 on:
   push:
