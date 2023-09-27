@@ -28,5 +28,5 @@ jobs:
     - name: Create Artifact-windows
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact-linux
+        name: my-artifact-windows-${{ github.ref_name }}
         path: ./bin/aws_cli.exe

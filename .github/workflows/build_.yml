@@ -31,5 +31,5 @@ jobs:
     - name: Create Artifact-linux
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact-linux
+        name: my-artifact-linux-${{ github.ref_name }}
         path: ./bin/aws_cli
