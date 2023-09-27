@@ -1,32 +1,32 @@
-name: Build aws_cli_s3 windows
+# name: Build aws_cli_s3 windows
 
-run-name: build Version windows ${{ github.ref_name }}
+# run-name: build Version windows ${{ github.ref_name }}
 
-on:
-  push:
-    tags:
-      - "v*"
+# on:
+#   push:
+#     tags:
+#       - "v*"
 
-jobs:
-  build:
-    runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ./
-    steps:
-    - uses: actions/checkout@v3
-      name: checkout project
+# jobs:
+#   build:
+#     runs-on: windows-latest
+#     defaults:
+#       run:
+#         working-directory: ./
+#     steps:
+#     - uses: actions/checkout@v3
+#       name: checkout project
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
+#     - name: Set up Go
+#       uses: actions/setup-go@v4
+#       with:
+#         go-version: '1.20'
 
-    - name: Build windows
-      run: go build -v -o bin/aws_cli.exe
+#     - name: Build windows
+#       run: go build -v -o bin/aws_cli.exe
 
-    - name: Create Artifact-windows
-      uses: actions/upload-artifact@v2
-      with:
-        name: my-artifact-windows-${{ github.ref_name }}
-        path: ./bin/aws_cli.exe
+#     - name: Create Artifact-windows
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: my-artifact-windows-${{ github.ref_name }}
+#         path: ./bin/aws_cli.exe
