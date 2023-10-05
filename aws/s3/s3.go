@@ -87,8 +87,8 @@ func ExeInstallAwsCli() {
 	payloadLinux := ParamsInstallLinux {
 		download: []string{"curl", "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip", "-o", "awscliv2.zip"},
 		zip: []string{"unzip", "awscliv2.zip"},
-		install: []string{"sudo", "./aws/install"},
-		uninstall: []string{"sudo", "rm", "-rf", "aws/"},
+		install: []string{"./aws/install"},
+		uninstall: []string{"rm", "-rf", "aws/"},
 	}
 
 	if *command_installing_aws_cli == "linux" {
@@ -96,11 +96,11 @@ func ExeInstallAwsCli() {
 
 		cmd2 := exec.Command(payloadLinux.zip[0], payloadLinux.zip[1])
 
-		cmd3 := exec.Command(payloadLinux.install[0], payloadLinux.install[1])
+		cmd3 := exec.Command(payloadLinux.install[0])
 
-		remove_dir_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.uninstall[1], payloadLinux.uninstall[2], payloadLinux.uninstall[3])
+		remove_dir_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.uninstall[1], payloadLinux.uninstall[2])
 
-		remove_zip_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.uninstall[1], payloadLinux.zip[1])
+		remove_zip_aws := exec.Command(payloadLinux.uninstall[0], payloadLinux.zip[1])
 
 		if err1 := cmd1.Run(); err1 != nil {
 			fmt.Println("Erro ao baixar o arquivo:", err1)
