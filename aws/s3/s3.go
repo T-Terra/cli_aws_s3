@@ -160,10 +160,10 @@ func ReadFile() []string {
 func ExeCommandAws( data string, bucketS3 string ) {
 	payloadAws := ParamsAws {
 		cmd: []string{"aws", "s3", "cp", "s3://"},
-		dirNew: []string{"mkdir", "s3_downloads"},
+		dirNew: []string{"mkdir", "tmp"},
 	}
 	if runtime.GOOS == "linux" {
-		_, err := os.Stat("s3_downloads")
+		_, err := os.Stat("tmp")
 		if os.IsNotExist(err) {
 			cmd := exec.Command(payloadAws.dirNew[0], payloadAws.dirNew[1])
 			errCmd := cmd.Run()
